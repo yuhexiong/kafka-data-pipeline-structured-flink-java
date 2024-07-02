@@ -19,7 +19,7 @@ public abstract class AbstractFlinkPipelineJob {
         this.cmdLineArgs = new CmdLineArgsParser(args);
     }
 
-    public YamlParser loadSetting() throws IOException {
+    public YamlParser getYamlParser() throws IOException {
         if (cmdLineArgs.getFilePath() != null) {
             String path = cmdLineArgs.getFilePath();
             InputStream inputStream = null;
@@ -33,9 +33,9 @@ public abstract class AbstractFlinkPipelineJob {
                     inputStream = new FileInputStream(file);
                 }
 
-                YamlParser yamlSetting = new YamlParser(inputStream);
-                this.jobName = yamlSetting.jobName;
-                return yamlSetting;
+                YamlParser yamlParser = new YamlParser(inputStream);
+                this.jobName = yamlParser.jobName;
+                return yamlParser;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             } finally {
