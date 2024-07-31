@@ -2,22 +2,25 @@ package com.examples.job;
 
 import com.examples.deserializer.KafkaValueDeserializationSchema;
 import com.examples.entity.ProductEvent;
+import com.examples.function.ProductEventDorisMapFunction;
 import com.examples.parser.YamlParser;
-import com.examples.parser.sink.KafkaSinkConfig;
+import com.examples.parser.sink.DorisSinkConfig;
 import com.examples.parser.source.KafkaSourceConfig;
-import com.examples.serializer.KafkaValueSerializationSchema;
+import org.apache.doris.flink.sink.DorisSink;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.table.api.DataTypes;
+import org.apache.flink.table.data.GenericRowData;
+import org.apache.flink.table.types.DataType;
 
-public class KafkaToKafkaJob extends AbstractFlinkPipelineJob {
-    public KafkaToKafkaJob(String[] args) {
+public class KafkaToDorisJob extends AbstractFlinkPipelineJob {
+    public KafkaToDorisJob(String[] args) {
         super(args);
     }
 
     public static void main(String[] args) throws Exception {
-        KafkaToKafkaJob job = new KafkaToKafkaJob(args);
+        KafkaToDorisJob job = new KafkaToDorisJob(args);
         YamlParser yamlParser = job.getYamlParser();
 
         // kafka source
@@ -25,12 +28,14 @@ public class KafkaToKafkaJob extends AbstractFlinkPipelineJob {
         KafkaSource<ProductEvent> source = sourceConfig.buildSource(new KafkaValueDeserializationSchema<>(ProductEvent.class));
         DataStream<ProductEvent> stream = job.env.fromSource(source, WatermarkStrategy.noWatermarks(), sourceConfig.getName());
 
-        // kafka sink
-        KafkaSinkConfig sinkConfig = yamlParser.getSinkConfig(KafkaSinkConfig.class, "kafka");
-        KafkaSink<ProductEvent> sink = sinkConfig.buildSink(new KafkaValueSerializationSchema<>(sinkConfig.getTopics()));
+        // doris sink
+        DorisSinkConfig sinkConfig = yamlParser.getSinkConfig(DorisSinkConfig.class, "doris");
+        DorisSink<GenericRowData> dorisSink = sinkConfig.buildSink(
+            new String[]{"id", "name", "category", "manufacturer", "description", "price"},
+            new DataType[]{DataTypes.VARCHAR(10), DataTypes.VARCHAR(50), DataTypes.VARCHAR(50), DataTypes.VARCHAR(50), DataTypes.VARCHAR(50), DataTypes.DOUBLE()});
 
         // connect
-        stream.sinkTo(sink);
+        stream.map(new ProductEventDorisMapFunction()).sinkTo(dorisSink);
         stream.print();
 
         job.run();
