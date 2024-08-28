@@ -13,7 +13,6 @@ public class KafkaSourceConfig extends AbstractConfigParser {
     String bootstrapServers;
     String topics;
     String groupId;
-    String name;
     OffsetsInitializer offset;
 
     public KafkaSourceConfig(Map<String, Object> map){
@@ -25,7 +24,6 @@ public class KafkaSourceConfig extends AbstractConfigParser {
         this.bootstrapServers = String.valueOf(map.get("bootstrapServers"));
         this.topics = String.valueOf(map.get("topics"));
         this.groupId = String.valueOf(map.get("groupId"));
-        this.name = String.valueOf(map.get("name"));
 
         // default earliest
         if (String.valueOf(map.get("offsetInitializationType")).equals("LATEST")) {

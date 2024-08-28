@@ -9,5 +9,5 @@ public class ProductEvent {
     private String category;
     private String manufacturer;
     private String description;
-    private double price;
+    private double cost;
 }

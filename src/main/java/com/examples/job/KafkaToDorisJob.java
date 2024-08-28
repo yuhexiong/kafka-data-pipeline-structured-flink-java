@@ -31,7 +31,7 @@ public class KafkaToDorisJob extends AbstractFlinkPipelineJob {
         // doris sink
         DorisSinkConfig sinkConfig = yamlParser.getSinkConfig(DorisSinkConfig.class, "doris");
         DorisSink<GenericRowData> dorisSink = sinkConfig.buildSink(
-            new String[]{"id", "name", "category", "manufacturer", "description", "price"},
+            new String[]{"id", "name", "category", "manufacturer", "description", "cost"},
             new DataType[]{DataTypes.VARCHAR(10), DataTypes.VARCHAR(50), DataTypes.VARCHAR(50), DataTypes.VARCHAR(50), DataTypes.VARCHAR(50), DataTypes.DOUBLE()});
 
         // connect

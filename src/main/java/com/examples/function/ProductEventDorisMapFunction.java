@@ -20,7 +20,7 @@ public class ProductEventDorisMapFunction implements MapFunction<ProductEvent, G
         rowData.setField(2, StringData.fromString(payloadData.getCategory()));
         rowData.setField(3, StringData.fromString(payloadData.getManufacturer()));
         rowData.setField(4, StringData.fromString(payloadData.getDescription()));
-        rowData.setField(5, payloadData.getPrice());
+        rowData.setField(5, payloadData.getCost());
         return rowData;
     }
 }
