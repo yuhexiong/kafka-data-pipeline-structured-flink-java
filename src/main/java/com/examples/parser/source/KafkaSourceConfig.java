@@ -10,6 +10,7 @@ import java.util.Map;
 
 @Getter
 public class KafkaSourceConfig extends AbstractConfigParser {
+    String jobName;
     String bootstrapServers;
     String topics;
     String groupId;
@@ -21,6 +22,7 @@ public class KafkaSourceConfig extends AbstractConfigParser {
 
     @Override
     protected void initConfig(Map<String, Object> map) {
+        this.jobName = String.valueOf(map.get("jobName"));
         this.bootstrapServers = String.valueOf(map.get("bootstrapServers"));
         this.topics = String.valueOf(map.get("topics"));
         this.groupId = String.valueOf(map.get("groupId"));

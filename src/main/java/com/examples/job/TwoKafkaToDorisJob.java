@@ -30,12 +30,12 @@ public class TwoKafkaToDorisJob extends AbstractFlinkPipelineJob {
         // kafka source ProductEvent
         KafkaSourceConfig productSourceConfig = yamlParser.getSourceConfig(KafkaSourceConfig.class, "kafka-product");
         KafkaSource<ProductEvent> productSource = productSourceConfig.buildSource(new KafkaValueDeserializationSchema<>(ProductEvent.class));
-        DataStream<ProductEvent> productStream = job.env.fromSource(productSource, WatermarkStrategy.noWatermarks(), productSourceConfig.getName());
+        DataStream<ProductEvent> productStream = job.env.fromSource(productSource, WatermarkStrategy.noWatermarks(), productSourceConfig.getJobName());
 
         // kafka source SaleEvent
         KafkaSourceConfig saleSourceConfig = yamlParser.getSourceConfig(KafkaSourceConfig.class, "kafka-sale");
         KafkaSource<SaleEvent> saleSource = saleSourceConfig.buildSource(new KafkaValueDeserializationSchema<>(SaleEvent.class));
-        DataStream<SaleEvent> saleStream = job.env.fromSource(saleSource, WatermarkStrategy.noWatermarks(), saleSourceConfig.getName());
+        DataStream<SaleEvent> saleStream = job.env.fromSource(saleSource, WatermarkStrategy.noWatermarks(), saleSourceConfig.getJobName());
 
         // doris sink
         DorisSinkConfig sinkConfig = yamlParser.getSinkConfig(DorisSinkConfig.class, "doris");

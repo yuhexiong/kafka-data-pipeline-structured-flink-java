@@ -26,7 +26,7 @@ public class KafkaToDorisJob extends AbstractFlinkPipelineJob {
         // kafka source
         KafkaSourceConfig sourceConfig = yamlParser.getSourceConfig(KafkaSourceConfig.class, "kafka");
         KafkaSource<ProductEvent> source = sourceConfig.buildSource(new KafkaValueDeserializationSchema<>(ProductEvent.class));
-        DataStream<ProductEvent> stream = job.env.fromSource(source, WatermarkStrategy.noWatermarks(), sourceConfig.getName());
+        DataStream<ProductEvent> stream = job.env.fromSource(source, WatermarkStrategy.noWatermarks(), sourceConfig.getJobName());
 
         // doris sink
         DorisSinkConfig sinkConfig = yamlParser.getSinkConfig(DorisSinkConfig.class, "doris");

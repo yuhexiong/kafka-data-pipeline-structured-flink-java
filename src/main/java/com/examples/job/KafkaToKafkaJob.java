@@ -23,7 +23,7 @@ public class KafkaToKafkaJob extends AbstractFlinkPipelineJob {
         // kafka source
         KafkaSourceConfig sourceConfig = yamlParser.getSourceConfig(KafkaSourceConfig.class, "kafka");
         KafkaSource<ProductEvent> source = sourceConfig.buildSource(new KafkaValueDeserializationSchema<>(ProductEvent.class));
-        DataStream<ProductEvent> stream = job.env.fromSource(source, WatermarkStrategy.noWatermarks(), sourceConfig.getName());
+        DataStream<ProductEvent> stream = job.env.fromSource(source, WatermarkStrategy.noWatermarks(), sourceConfig.getJobName());
 
         // kafka sink
         KafkaSinkConfig sinkConfig = yamlParser.getSinkConfig(KafkaSinkConfig.class, "kafka");
