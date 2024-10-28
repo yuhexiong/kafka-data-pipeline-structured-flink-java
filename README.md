@@ -23,7 +23,7 @@ topic1 in localhost:9092 -> topic2 in localhost:9092
 ### 2. KafkaToDoris
 
 - Kafka Data Structure
-```
+```json
 {
     "location": "Area A",
     "timestamp": "2024-03-25T08:00:00",
@@ -56,7 +56,7 @@ topic1 in localhost:9092 -> topic2 in localhost:9092
 ### 3. TwoKafkaToDoris
 
 - Kafka Data Structure V1
-```
+```json
 {
     "location": "Area A",
     "timestamp": "2024-03-25T08:00:00",
@@ -78,7 +78,7 @@ topic1 in localhost:9092 -> topic2 in localhost:9092
 ```
 
 - Kafka Data Structure V2
-```
+```json
 {
     "equipments": [
         {
