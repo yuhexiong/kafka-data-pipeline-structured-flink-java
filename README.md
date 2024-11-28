@@ -17,92 +17,76 @@ Use IntelliJ IDEA
 
 ### 1. KafkaToKafka
 
-topic1 in localhost:9092 -> topic2 in localhost:9092  
+Transfer all Product messages from `topic-source` in Kafka (localhost:9092) to `topic-sink` in Kafka (localhost:9092).  
 
-
-### 2. KafkaToDoris
-
-- Kafka Data Structure
+- Kafka Topic `topic-source` Message
 ```json
 {
-    "location": "Area A",
-    "timestamp": "2024-03-25T08:00:00",
-    "data": [
-        {
-            "sensorId": "sensor001",
-            "sensorType": "Temperature",
-            "value": 25.5,
-            "unit": "Celsius"
-        },
-        {
-            "sensorId": "sensor002",
-            "sensorType": "Humidity",
-            "value": 60.2,
-            "unit": "%"
-        }
-    ]
+    "id": "12345",
+    "name": "Wireless Mouse",
+    "category": "Electronics",
+    "manufacturer": "TechCorp",
+    "description": "A sleek, ergonomic wireless mouse with advanced optical tracking.",
+    "cost": 29.99
 }
 ```
 
-- Doris table
+### 2. KafkaToDoris
 
-| id        | type          | location    | timestamp           | value | unit    |  
-|-----------|---------------|-------------|---------------------|-------|---------|  
-| sensor001 | Temperature   | Area A      | 2024-03-25T08:00:00 | 25.5  | Celsius |  
-| sensor002 | Humidity      | Area A      | 2024-03-25T08:00:00 | 60.2  | %       |  
+Convert all message in `topic-product` in Kafka (localhost:9092) and insert it into the Doris (localhost:9030) database `database.product`.  
+
+- Kafka Topic `topic-product` Message
+```json
+{
+    "id": "12345",
+    "name": "Wireless Mouse",
+    "category": "Electronics",
+    "manufacturer": "TechCorp",
+    "description": "A sleek, ergonomic wireless mouse with advanced optical tracking.",
+    "cost": 29.99
+}
+```
+
+
+- Doris Table `database.product`
+- 
+| id      | name            | category    | manufacturer  | description                       | cost  |
+|---------|-----------------|-------------|---------------|-----------------------------------|-------|
+| 12345   | Wireless Mouse  | Electronics | TechCorp      | A sleek, ergonomic wireless mouse | 29.99 |
+
 
 
 
 ### 3. TwoKafkaToDoris
+Combine message `topic-product` in Kafka (localhost:9092) with message from `topic-sale`. Then, transfer the resulting data into the Doris (localhost:9030) database `database.sale_report`.  
 
-- Kafka Data Structure V1
+- Kafka Topic `topic-product` Message
 ```json
 {
-    "location": "Area A",
-    "timestamp": "2024-03-25T08:00:00",
-    "data": [
-        {
-            "sensorId": "sensor001",
-            "sensorType": "Temperature",
-            "value": 25.5,
-            "unit": "Celsius"
-        },
-        {
-            "sensorId": "sensor002",
-            "sensorType": "Humidity",
-            "value": 60.2,
-            "unit": "%"
-        }
-    ]
+    "id": "12345",
+    "name": "Wireless Mouse",
+    "category": "Electronics",
+    "manufacturer": "TechCorp",
+    "description": "A sleek, ergonomic wireless mouse with advanced optical tracking.",
+    "cost": 29.99
 }
 ```
 
-- Kafka Data Structure V2
+- Kafka Topic `topic-sale` Message
 ```json
 {
-    "equipments": [
-        {
-            "id": "equipment001",
-            "name": "機器1",
-            "location": "Area A"
-        }
-    ],
-    "sensors": [
-        {
-            "id": "sensor001",
-            "equipments": ["equipment001", "equipment002"]
-        },
-        {
-            "id": "sensor002",
-            "equipments": ["equipment001", "equipment003"]
-        }
-    ]
+    "id": "A98765",
+    "productId": "12345",
+    "unit": 3,
+    "unitPrice": 49.99,
+    "totalPrice": 149.97,
+    "saleDate": "2024-11-28"
 }
 ```
 
-- Doris table
+- Doris Table `database.sale_report`
 
-| equipment_id  | sensor_id | sensor_type   | sensor_timestamp      | sensor_value | sensor_unit  |  
-|---------------|-----------|---------------|-----------------------|--------------|--------------|  
-| equipment001  | sensor001 | Temperature   | 2024-05-02T08:00:00   | 25.5         | Celsius      |  
-| equipment001  | sensor002 | Humidity      | 2024-05-02T08:00:00   | 60.2         | %            |  
+
+| sale_id   | product_id | unit | unit_price | total_price | sale_date            | product_name  | product_unit_cost | profit |
+|-----------|------------|------|------------|-------------|----------------------|---------------|-------------------|--------|
+| A98765    | 12345      | 3    | 49.99      | 149.97      | 2024-11-28T08:00:00  | Wireless Mouse| 29.99             | 60.00  |

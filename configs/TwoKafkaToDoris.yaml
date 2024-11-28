@@ -2,17 +2,17 @@ jobName: "Two Kafka To Doris"
 source:
   kafka-product:
     bootstrapServers: localhost:9092
-    topics: product_topic
+    topics: topic-product
     groupId: group-2024-10-28
     offsetInitializationType: EARLIEST
   kafka-sale:
     bootstrapServers: localhost:9092
-    topics: sale_topic
+    topics: topic-sale
     groupId: group-2024-10-28
     offsetInitializationType: EARLIEST
 sink:
   doris:
     fenodes: localhost:8030
-    table: database.sink_table
+    table: database.sale_report
     username: root
     password: password

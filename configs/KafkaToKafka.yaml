@@ -2,10 +2,10 @@ jobName: "Kafka To Kafka"
 source:
   kafka:
     bootstrapServers: localhost:9092
-    topics: source_topic
+    topics: topic-source
     groupId: group-2024-10-28
     offsetInitializationType: EARLIEST
 sink:
   kafka:
     bootstrapServers: localhost:9092
-    topics: sink_topic
+    topics: topic-sink

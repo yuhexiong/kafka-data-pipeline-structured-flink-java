@@ -2,12 +2,12 @@ jobName: "Kafka To Doris"
 source:
   kafka:
     bootstrapServers: localhost:9092
-    topics: source_topic
+    topics: topic-product
     groupId: group-2024-10-28
     offsetInitializationType: EARLIEST
 sink:
   doris:
     fenodes: localhost:8030
-    table: database.sink_table
+    table: database.product
     username: root
     password: password
