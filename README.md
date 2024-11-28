@@ -49,11 +49,11 @@ Convert all message in `topic-product` in Kafka (localhost:9092) and insert it i
 
 
 - Doris Table `database.product`
-- 
+```
 | id      | name            | category    | manufacturer  | description                       | cost  |
 |---------|-----------------|-------------|---------------|-----------------------------------|-------|
 | 12345   | Wireless Mouse  | Electronics | TechCorp      | A sleek, ergonomic wireless mouse | 29.99 |
-
+```
 
 
 
@@ -86,7 +86,8 @@ Combine message `topic-product` in Kafka (localhost:9092) with message from `top
 
 - Doris Table `database.sale_report`
 
-
+```
 | sale_id   | product_id | unit | unit_price | total_price | sale_date            | product_name  | product_unit_cost | profit |
 |-----------|------------|------|------------|-------------|----------------------|---------------|-------------------|--------|
 | A98765    | 12345      | 3    | 49.99      | 149.97      | 2024-11-28T08:00:00  | Wireless Mouse| 29.99             | 60.00  |
+```
