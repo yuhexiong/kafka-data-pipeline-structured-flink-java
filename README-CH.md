@@ -1,29 +1,24 @@
 # Kafka Data Pipeline Flink
 
-**(also provided Traditional Chinese version document [README-CH.md](README-CH.md).)**
-
-
-Data pipeline written by flink to transfer Kafka to Kafka, Doris and also merge the two data sources.  
+使用 Flink 編寫的資料管道，用於將 Kafka 資料傳輸到 Kafka、Doris，也支援合併兩個資料來源。  
 
 ## Overview
 
-- Platform: JDK 11
-- Build Tool: Apache Maven v3.9.6
-- Data Processing Framework: Flink v1.18.1
-
+- 平台：JDK 11  
+- 建構工具：Apache Maven v3.9.6  
+- 資料處理框架：Flink v1.18.1  
 
 ## Run
-Use IntelliJ IDEA  
-![IntelliJ IDEA](IntelliJIDEA.png)
-
+使用 IntelliJ IDEA  
+![IntelliJ IDEA](IntelliJIDEA.png)  
 
 ## Entry
 
-### 1. KafkaToKafka
+### 1. KafkaToKafka  
 
-Transfer all Product messages from `topic-source` in Kafka (localhost:9092) to `topic-sink` in Kafka (localhost:9092).  
+將 Kafka (localhost:9092) 中 `topic-source` 的所有產品訊息傳輸到 Kafka 中的 `topic-sink`。  
 
-- Kafka Topic `topic-source` Message
+- Kafka 主題 `topic-source` 訊息範例  
 ```json
 {
     "id": "12345",
@@ -33,13 +28,13 @@ Transfer all Product messages from `topic-source` in Kafka (localhost:9092) to `
     "description": "A sleek, ergonomic wireless mouse with advanced optical tracking.",
     "cost": 29.99
 }
-```
+```  
 
-### 2. KafkaToDoris
+### 2. KafkaToDoris  
 
-Convert all message in `topic-product` in Kafka (localhost:9092) and insert it into the Doris (localhost:9030) database `database.product`.  
+將 Kafka (localhost:9092) 中 `topic-product` 的所有訊息轉換後插入 Doris (localhost:9030) 資料庫 `database.product` 中。  
 
-- Kafka Topic `topic-product` Message
+- Kafka 主題 `topic-product` 訊息範例  
 ```json
 {
     "id": "12345",
@@ -49,22 +44,20 @@ Convert all message in `topic-product` in Kafka (localhost:9092) and insert it i
     "description": "A sleek, ergonomic wireless mouse with advanced optical tracking.",
     "cost": 29.99
 }
-```
+```  
 
-
-- Doris Table `database.product`
+- Doris 資料表 `database.product`  
 ```
 | id      | name            | category    | manufacturer  | description                       | cost  |
 |---------|-----------------|-------------|---------------|-----------------------------------|-------|
 | 12345   | Wireless Mouse  | Electronics | TechCorp      | A sleek, ergonomic wireless mouse | 29.99 |
-```
+```  
 
+### 3. TwoKafkaToDoris  
 
+將 Kafka (localhost:9092) 中 `topic-product` 與 `topic-sale` 的訊息結合後，傳輸到 Doris (localhost:9030) 資料庫 `database.sale_report` 中。  
 
-### 3. TwoKafkaToDoris
-Combine message `topic-product` in Kafka (localhost:9092) with message from `topic-sale`. Then, transfer the resulting data into the Doris (localhost:9030) database `database.sale_report`.  
-
-- Kafka Topic `topic-product` Message
+- Kafka 主題 `topic-product` 訊息範例  
 ```json
 {
     "id": "12345",
@@ -74,9 +67,9 @@ Combine message `topic-product` in Kafka (localhost:9092) with message from `top
     "description": "A sleek, ergonomic wireless mouse with advanced optical tracking.",
     "cost": 29.99
 }
-```
+```  
 
-- Kafka Topic `topic-sale` Message
+- Kafka 主題 `topic-sale` 訊息範例  
 ```json
 {
     "id": "A98765",
@@ -86,12 +79,11 @@ Combine message `topic-product` in Kafka (localhost:9092) with message from `top
     "totalPrice": 149.97,
     "saleDate": "2024-11-28"
 }
-```
+```  
 
-- Doris Table `database.sale_report`
-
+- Doris 資料表 `database.sale_report`  
 ```
 | sale_id   | product_id | unit | unit_price | total_price | sale_date            | product_name  | product_unit_cost | profit |
 |-----------|------------|------|------------|-------------|----------------------|---------------|-------------------|--------|
 | A98765    | 12345      | 3    | 49.99      | 149.97      | 2024-11-28T08:00:00  | Wireless Mouse| 29.99             | 60.00  |
-```
+```  
